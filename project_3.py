@@ -17,10 +17,11 @@ class Project3:
         # TODO: Implement this method for Task 4, Step 1
         p = 0
         q = 0
-        found = false
-        while found:
-            if n%p == 0 and p != 1:
+        found = False
+        while not found:
+            if n%p == 0 and (p != 1 and p != 0):
                 q = n/p
+                found = True
             else:
                 p += 1
 
@@ -30,7 +31,7 @@ class Project3:
         # TODO: Implement this method for Task 4, Step 2
         d = 0
         totient = (p-1) * (q-1)
-        d = (e**-1)%totient
+        d = pow(e, -1, totient)
 
         return d
 
@@ -39,7 +40,7 @@ class Project3:
         n = int(n_str, 16)
         d = int(d_str, 16)
         c = int(c_str, 16)
-        m = (c**d)%n
+        m = pow(c, d, n)
 
         return hex(m).rstrip('L')
 
@@ -162,12 +163,12 @@ class Project3:
     def task_3(self, user_id_1: str, user_id_2: str, amount: int, prev_block_hash: str):
         # TODO: Implement this method for Task 3
         nonce = 0
-        foundNonce = false
-        while foundNonce:
+        foundNonce = False
+        while not foundNonce:
             block = str(nonce) + user_id_1 + ":" + user_id_2 + ":" + str(amount) + prev_block_hash
             tempHash = hashlib.sha256(block.encode()).hexdigest()
             if(tempHash[:2] == "00"):
-                foundNonce = true
+                foundNonce = True
             else:
                 nonce += 1
 
