@@ -11,6 +11,36 @@ class Project3:
 
     # TODO: OPTIONAL - Add helper methods below
     # BEGIN HELPER METHODS
+    def get_gcd(self, x: int, y: int):
+        gcd = 0
+        nextY = y if y > x else x
+        nextX = x if x < y else y
+        found = False
+        while not found:
+            if nextY%nextX != 0:
+                temp = nextY%nextX
+                nextY = nextX
+                nextX = temp
+            else:
+                found = True
+                gcd = nextX
+        return gcd
+
+    def get_gcd_extended(self, a: int, n: int):
+        gcd = self.get_gcd(a,n)
+        found = False
+        x = 0
+        y = 0
+        small = a if a < n else n
+        large = n if n > a else a
+        if gcd%small == 0:
+            x = gcd/small
+            y = 0
+        else:
+            x = gcd//small
+            y = (gcd - x)//large
+
+        return x,y
     # END HELPER METHODS
 
     def get_factors(self, n: int):
@@ -18,12 +48,18 @@ class Project3:
         p = 0
         q = 0
         found = False
+        a = 2
+        i = 2
         while not found:
-            if n%p == 0 and (p != 1 and p != 0):
-                q = n/p
+            a = pow(a, i, n)
+            d = self.get_gcd(a-1, n)
+            if d > 1 and d < n:
+                p = d
                 found = True
             else:
-                p += 1
+                i += 1
+
+        q = n/p
 
         return p, q
 
@@ -31,8 +67,8 @@ class Project3:
         # TODO: Implement this method for Task 4, Step 2
         d = 0
         totient = (p-1) * (q-1)
-        d = pow(e, -1, totient)
-
+        while divmod((d*e),totient) != 1:
+            d += 1
         return d
 
     def task_1(self, n_str: str, d_str: str, c_str: str):
