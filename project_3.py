@@ -26,21 +26,31 @@ class Project3:
                 gcd = nextX
         return gcd
 
-    def get_gcd_extended(self, a: int, n: int):
-        gcd = self.get_gcd(a,n)
-        found = False
-        x = 0
-        y = 0
-        small = a if a < n else n
-        large = n if n > a else a
-        if gcd%small == 0:
-            x = gcd/small
-            y = 0
-        else:
-            x = gcd//small
-            y = (gcd - x)//large
+    def get_gcd_extended(self, x: int, y: int):
+        varX, varY = x, y
+        aPrev, aNext = 1, 0
+        bPrev, bNext = 0, 1
+        while varY != 0:
+            quotient, remainder = varX//varY, varX%varY
+            varX, varY = varY, remainder
+            aPrev, aNext = aNext, aPrev - quotient * aNext
+            bPrev, bNext = bNext, bPrev - quotient * bNext
+        return aPrev,bPrev,varX
 
-        return x,y
+    def inverse(self, a: int, n: int):
+        xPrev, xNext = 0, 1
+        rPrev, rNext = n, a
+        while rNext != 0:
+            quotient = rPrev//rNext
+            xPrev, xNext = xNext, xPrev - quotient * xNext
+            rPrev, rNext = rNext, rPrev%rNext
+
+        if rPrev > 1:
+            print("wrong")
+            return 0
+        if xPrev < 0:
+            xPrev = xPrev + n
+        return xPrev
     # END HELPER METHODS
 
     def get_factors(self, n: int):
@@ -66,9 +76,9 @@ class Project3:
     def get_private_key_from_p_q_e(self, p: int, q: int, e: int):
         # TODO: Implement this method for Task 4, Step 2
         d = 0
-        totient = (p-1) * (q-1)
-        while divmod((d*e),totient) != 1:
-            d += 1
+        totient = int(p-1) * int(q-1)
+        d = int(self.inverse(e, totient))
+
         return d
 
     def task_1(self, n_str: str, d_str: str, c_str: str):
@@ -224,7 +234,15 @@ class Project3:
     def task_5(self, given_public_key_n: int, given_public_key_e: int, public_key_list: list):
         # TODO: Implement this method for Task 5
         d = 0
-
+        gcd = 0
+    
+        for n in public_key_list:
+            gcd = self.get_gcd(given_public_key_n, n)
+            if gcd != 1:
+                break
+        p = gcd
+        q = given_public_key_n//p
+        d = self.get_private_key_from_p_q_e(p, q, given_public_key_e)
         return d
 
     def task_6(self, n_1_str: str, c_1_str: str, n_2_str: str, c_2_str: str, n_3_str: str, c_3_str: str):
