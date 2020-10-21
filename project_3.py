@@ -42,9 +42,8 @@ class Project3:
         rPrev, rNext = n, a
         while rNext != 0:
             quotient = rPrev//rNext
-            xPrev, xNext = xNext, xPrev - quotient * xNext
             rPrev, rNext = rNext, rPrev%rNext
-
+            xPrev, xNext = xNext, xPrev - quotient * xNext
         if rPrev > 1:
             print("wrong")
             return 0
