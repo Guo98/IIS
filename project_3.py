@@ -50,6 +50,34 @@ class Project3:
         if xPrev < 0:
             xPrev = xPrev + n
         return xPrev
+
+    def chinese_remainder_theorem(self, n1: int, n2: int, n3: int, c1: int, c2: int, c3: int):
+        N = n1 * n2 * n3
+
+        temp1 = N // n1
+        cn1 = temp1 * int(self.inverse(temp1, n1)) * c1
+
+        temp2 = N // n2
+        cn2 = temp2 * int(self.inverse(temp2, n2)) * c2
+
+        temp3 = N // n3
+        cn3 = temp3 * int(self.inverse(temp3, n3)) * c3
+
+        total = int(cn1 + cn2 + cn3)
+
+        return total%N
+
+    def cube_root(self, n: int):
+        low, high = 0, n
+
+        while low < high:
+            middle = (low + high) // 2
+            if middle**3 < n:
+                low = middle + 1
+            else:
+                high = middle
+        
+        return low
     # END HELPER METHODS
 
     def get_factors(self, n: int):
@@ -256,19 +284,8 @@ class Project3:
         msg = ''
         m = 0
 
-        p_1, q_1 = get_factors(n_1)
-        d_1 = get_private_key_from_p_q_e(p_1, q_1, 3)
-
-        p_2, q_2 = get_factors(n_2)
-        d_2 = get_private_key_from_p_q_e(p_2, q_2, 3)
-
-        p_3, q_3 = get_factors(n_3)
-        d_3 = get_private_key_from_p_q_e(p_3, q_3, 3)
-
-        if (m == (c_1**d_1)%n_1) and (m == (c_2**d_2)%n_2) and (m == (c_2**d_2)%n_2):
-            m == (c_1**d_1)%n_1
-        else:
-            print("Something went wrong")
+        result = self.chinese_remainder_theorem(n_1, n_2, n_3, c_1, c_2, c_3)
+        m = self.cube_root(result)
 
         # Solve for m, which is an integer value, the line below will convert it to a string:
         msg = bytes.fromhex(hex(m).rstrip('L')[2:]).decode('UTF-8')
