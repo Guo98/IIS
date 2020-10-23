@@ -11,6 +11,8 @@ class Project3:
 
     # TODO: OPTIONAL - Add helper methods below
     # BEGIN HELPER METHODS
+
+    #gcd method that uses euclids algorithm
     def get_gcd(self, x: int, y: int):
         gcd = 0
         nextY = y if y > x else x
@@ -25,25 +27,33 @@ class Project3:
                 found = True
                 gcd = nextX
         return gcd
-
+    # gcd method that uses extended euclids algorithm which returns bezouts coefficients 
     def get_gcd_extended(self, x: int, y: int):
         varX, varY = x, y
         aPrev, aNext = 1, 0
         bPrev, bNext = 0, 1
-        while varY != 0:
+        found = False
+        while not found:
             quotient, remainder = varX//varY, varX%varY
             varX, varY = varY, remainder
             aPrev, aNext = aNext, aPrev - quotient * aNext
             bPrev, bNext = bNext, bPrev - quotient * bNext
-        return aPrev,bPrev,varX
+            if varY == 0:
+                found = True
+        return aPrev, bPrev, varX
 
+    # similar method to before, but only returns the bezout coefficient that is the 
+    # multiplicative modular inverse.
     def inverse(self, a: int, n: int):
         xPrev, xNext = 0, 1
         rPrev, rNext = n, a
-        while rNext != 0:
+        found = False
+        while not found:
             quotient = rPrev//rNext
             rPrev, rNext = rNext, rPrev%rNext
             xPrev, xNext = xNext, xPrev - quotient * xNext
+            if rNext == 0:
+                found = True
         if rPrev > 1:
             print("wrong")
             return 0
@@ -51,6 +61,7 @@ class Project3:
             xPrev = xPrev + n
         return xPrev
 
+    # chinese remainder theorem for finding out the m behind the broadcast rsa attack.
     def chinese_remainder_theorem(self, n1: int, n2: int, n3: int, c1: int, c2: int, c3: int):
         N = n1 * n2 * n3
 
@@ -65,14 +76,14 @@ class Project3:
 
         total = int(cn1 + cn2 + cn3)
 
-        return total%N
+        return total % N
 
+    # python doesn't support a built in cube root function without importing another library.
     def cube_root(self, n: int):
         low, high = 0, n
-
         while low < high:
             middle = (low + high) // 2
-            if middle**3 < n:
+            if middle ** 3 < n:
                 low = middle + 1
             else:
                 high = middle
@@ -82,6 +93,7 @@ class Project3:
 
     def get_factors(self, n: int):
         # TODO: Implement this method for Task 4, Step 1
+        # used pollards p-1 algorithm to find the p value
         p = 0
         q = 0
         found = False
@@ -89,21 +101,21 @@ class Project3:
         i = 2
         while not found:
             a = pow(a, i, n)
-            d = self.get_gcd(a-1, n)
+            d = self.get_gcd(a - 1, n)
             if d > 1 and d < n:
                 p = d
                 found = True
             else:
                 i += 1
 
-        q = n/p
+        q = n // p
 
         return p, q
 
     def get_private_key_from_p_q_e(self, p: int, q: int, e: int):
         # TODO: Implement this method for Task 4, Step 2
         d = 0
-        totient = int(p-1) * int(q-1)
+        totient = int(p - 1) * int(q - 1)
         d = int(self.inverse(e, totient))
 
         return d
@@ -268,7 +280,7 @@ class Project3:
             if gcd != 1:
                 break
         p = gcd
-        q = given_public_key_n//p
+        q = given_public_key_n // p
         d = self.get_private_key_from_p_q_e(p, q, given_public_key_e)
         return d
 
